@@ -6,6 +6,7 @@
 package main;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -25,19 +26,44 @@ public class Application {
     private final File[] fileList;
     private final static String _DIRECTORY = "src//documents";
     
+    public String getDirectory(){
+    return _DIRECTORY;
+        }
+
     public Application(String directory){
         fileList = new File(directory).listFiles();
     }
     public File[] getFileList(){
         return fileList;
     }
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    
+    public void setTotalLineCount(Application obj){
+        totalLineCount = obj.totalLineCount;
+    }
+    public long getTotalLineCount(){
+        return totalLineCount;
+    }
+    public void setTotalCharacterCount(Application obj){
+        totalCharacterCount = obj.totalCharacterCount;
+    }
+    public long getTotalCharacterCount(){
+        return totalCharacterCount;
+    }
+    
+    
+    
+    public static void main(String[] args) throws InterruptedException, ExecutionException, SQLException {
           
          Application x = new Application(_DIRECTORY);
-         x.getTotals();
+         x = x.getTotals(x);
+         x.setTotalCharacterCount(x);
+         x.setTotalLineCount(x);
          
+         Database db = new Database(x);
+         System.out.println(db.insert());
     }
-    public void getTotals() throws InterruptedException, ExecutionException{
+    
+    public Application getTotals(Application obj) throws InterruptedException, ExecutionException{
          ExecutorService executor = Executors.newFixedThreadPool(4);
         List<Callable<FileReadings>> tasks = new ArrayList<>();
          for (File file : getFileList()) {
@@ -47,13 +73,13 @@ public class Application {
       List<Future<FileReadings>> responses = executor.invokeAll(tasks);
      
       for (Future<FileReadings> response : responses) {
-           totalCharacterCount += response.get().characterCount;
-           totalLineCount += response.get().lineCount;
+           obj.totalCharacterCount += response.get().characterCount;
+           obj.totalLineCount += response.get().lineCount;
       }
-          
           System.out.println("Total lines in all documents: " + totalLineCount);
           System.out.println("Total characters in all documents: " + totalCharacterCount);
-                  
+           
           executor.shutdown();
+          return obj;
     }
 }
