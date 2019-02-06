@@ -1,3 +1,3 @@
 # DirectoryReader
 
-Read documents in directory
+Read documents in directory using multithreading 
