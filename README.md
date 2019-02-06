@@ -1,6 +1,6 @@
 # DirectoryReader
 
-Read documents in directory using multithreading 
+Read documents in directory using multithreading  and then insert into local mysql database
 Example output:
 
 There were: 88 characters in: test2.txt 
