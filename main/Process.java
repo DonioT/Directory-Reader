@@ -25,14 +25,13 @@ public class Process implements Callable<FileReadings> {
     public Process(File file){
         FileReadings obj = new FileReadings();
         this.object = obj;
-        
         this.file = file;
     }
     
-    public void CountCharacters(File file){
+    public int CountCharacters(File file){
         int count = 0;
+        
         try {
-            
             BufferedReader reader = Files.newBufferedReader(file.toPath());
             while(reader.read() != -1){
                 count++;
@@ -41,20 +40,22 @@ public class Process implements Callable<FileReadings> {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-            object.characterCount = count;
+           return count;
     }
-    public void CountLines(File file){
+    public long CountLines(File file){
+        Stream<String> text = null;
         try {
-            Stream<String> text = Files.lines(file.toPath());
-            object.lineCount = text.count();
+            text = Files.lines(file.toPath());
+           
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+         return text.count();
     }
    
     public FileReadings call() throws Exception {
-        CountCharacters(this.file);
-        CountLines(this.file);
+        object.characterCount = CountCharacters(this.file);
+        object.lineCount = CountLines(this.file);
         System.out.println("THERE WERE: " + object.characterCount + " CHARACTERS IN: " + file.getName());
         System.out.println("THERE WERE: " + object.lineCount + " LINES IN: " + file.getName());
         return object;
