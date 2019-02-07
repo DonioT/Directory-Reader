@@ -28,36 +28,27 @@ public class Process implements Callable<FileReadings> {
         this.file = file;
     }
     
-    public int CountCharacters(File file){
+    public FileReadings GeneralRead(File file, FileReadings obj){
         int count = 0;
-        
-        try {
+        String line;
+        try{
+            obj.lineCount = Files.lines(file.toPath()).count();
             BufferedReader reader = Files.newBufferedReader(file.toPath());
-            while(reader.read() != -1){
-                count++;
-            }
-            object.characterCount = reader.read();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+              while((line = reader.readLine()) != null) {
+                  count += line.length();
+         }
+            obj.characterCount = count;
+            
+    } catch(IOException ex){
+          ex.printStackTrace();
         }
-           return count;
-    }
-    public long CountLines(File file){
-        Stream<String> text = null;
-        try {
-            text = Files.lines(file.toPath());
-           
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-         return text.count();
+        return obj;
     }
    
     public FileReadings call() throws Exception {
-        object.characterCount = CountCharacters(this.file);
-        object.lineCount = CountLines(this.file);
-        System.out.println("THERE WERE: " + object.characterCount + " CHARACTERS IN: " + file.getName());
-        System.out.println("THERE WERE: " + object.lineCount + " LINES IN: " + file.getName());
+        object = GeneralRead(file, object);
+        System.out.println("There were: " + object.characterCount + " characters in: " + file.getName());
+        System.out.println("There were: " + object.lineCount + " lines in: " + file.getName());
         return object;
     }
 }

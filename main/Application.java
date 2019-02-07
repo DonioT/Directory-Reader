@@ -37,14 +37,14 @@ public class Application {
         return fileList;
     }
     
-    public void setTotalLineCount(Application obj){
-        totalLineCount = obj.totalLineCount;
+    public void setTotalLineCount(long val){
+        totalLineCount = val;
     }
     public long getTotalLineCount(){
         return totalLineCount;
     }
-    public void setTotalCharacterCount(Application obj){
-        totalCharacterCount = obj.totalCharacterCount;
+    public void setTotalCharacterCount(long val){
+        totalCharacterCount = val;
     }
     public long getTotalCharacterCount(){
         return totalCharacterCount;
@@ -54,13 +54,13 @@ public class Application {
     
     public static void main(String[] args) throws InterruptedException, ExecutionException, SQLException {
           
-         Application x = new Application(_DIRECTORY);
-         x = x.getTotals(x);
-         x.setTotalCharacterCount(x);
-         x.setTotalLineCount(x);
+         Application instance = new Application(_DIRECTORY);
+         instance = instance.getTotals(instance);
+         instance.setTotalCharacterCount(instance.totalCharacterCount);
+         instance.setTotalLineCount(instance.totalLineCount);
          
-         Database db = new Database(x);
-         System.out.println(db.insert());
+         Database db = new Database(instance);
+         System.out.println("Insert was successful: " + db.insert());
     }
     
     public Application getTotals(Application obj) throws InterruptedException, ExecutionException{

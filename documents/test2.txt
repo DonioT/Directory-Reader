@@ -11,10 +11,8 @@ line
 .,v
 xp
 ppp
-ppp
-
+pp 
 x
-
 
 x
 
