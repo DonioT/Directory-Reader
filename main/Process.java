@@ -5,14 +5,20 @@
  */
 package main;
 
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
 /**
  *
@@ -29,26 +35,41 @@ public class Process implements Callable<FileReadings> {
     }
     
     public FileReadings GeneralRead(File file, FileReadings obj){
-        int count = 0;
+        long charCount = 0;
+        long whiteSpaceCount = 0;
+        long emptyLineCount = 0;
+        long lineCount = 0;
+        long wordCount = 0;
+        
         String line;
         try{
-            obj.lineCount = Files.lines(file.toPath()).count();
+            lineCount = Files.lines(file.toPath()).count();
+            emptyLineCount = Files.lines(file.toPath()).filter(i -> i.trim().isEmpty()).count();
             BufferedReader reader = Files.newBufferedReader(file.toPath());
               while((line = reader.readLine()) != null) {
-                  count += line.length();
+                   if(!line.trim().isEmpty()){
+                         wordCount += line.split("\\W+").length;
+                   }
+                  
+                  whiteSpaceCount += line.chars().filter(i -> i  == ' ').count();
+                  charCount += line.length();
          }
-            obj.characterCount = count;
+       
+              System.out.println("total words in this document" + wordCount);
+              obj.setLineCount(lineCount);
+              obj.setCharacterCount(charCount);
+              obj.setEmptyLineCount(emptyLineCount);
+              obj.setWhiteSpaceCount(whiteSpaceCount);
+              obj.setWordCount(wordCount);
             
     } catch(IOException ex){
           ex.printStackTrace();
         }
         return obj;
     }
-   
+    
     public FileReadings call() throws Exception {
         object = GeneralRead(file, object);
-        System.out.println("There were: " + object.characterCount + " characters in: " + file.getName());
-        System.out.println("There were: " + object.lineCount + " lines in: " + file.getName());
         return object;
     }
 }

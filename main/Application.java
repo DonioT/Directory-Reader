@@ -23,6 +23,10 @@ public class Application {
 
     private long totalCharacterCount;
     private long totalLineCount;
+    private long totalEmptySpaces;
+    private long totalEmptyLines;
+    private long totalWordCount;
+    
     private final File[] fileList;
     private final static String _DIRECTORY = "src//documents";
     
@@ -40,16 +44,33 @@ public class Application {
     public void setTotalLineCount(long val){
         totalLineCount = val;
     }
-    public long getTotalLineCount(){
-        return totalLineCount;
-    }
     public void setTotalCharacterCount(long val){
         totalCharacterCount = val;
+    }
+    public void setTotalEmptySpaces(long val){
+        this.totalEmptySpaces = val;
+    }
+    public void setTotalEmptyLines(long val){
+        this.totalEmptyLines = val;
+    }
+    public void setTotalWordCount(long val){
+        this.totalWordCount = val;
+    }
+    public long getTotalLineCount(){
+        return totalLineCount;
     }
     public long getTotalCharacterCount(){
         return totalCharacterCount;
     }
-    
+    public long getTotalEmptySpaces(){
+        return this.totalEmptySpaces;
+    }
+    public long getTotalEmptyLines(){
+        return this.totalLineCount;
+    }
+    public long getTotalWordCount(){
+        return this.totalWordCount;
+    }
     
     
     public static void main(String[] args) throws InterruptedException, ExecutionException, SQLException {
@@ -73,13 +94,21 @@ public class Application {
       List<Future<FileReadings>> responses = executor.invokeAll(tasks);
      
       for (Future<FileReadings> response : responses) {
-           obj.totalCharacterCount += response.get().characterCount;
-           obj.totalLineCount += response.get().lineCount;
-      }
+           obj.totalCharacterCount += response.get().getCharacterCount();
+           obj.totalLineCount += response.get().getLineCount();
+           obj.totalEmptySpaces += response.get().getWhiteSpaceCount();
+           obj.totalEmptyLines += response.get().getEmptyLineCount();
+           obj.totalWordCount += response.get().getWordCount();
+      }  
+      executor.shutdown();
+      
+          System.out.println("-------------------------------------------------");
           System.out.println("Total lines in all documents: " + totalLineCount);
           System.out.println("Total characters in all documents: " + totalCharacterCount);
-           
-          executor.shutdown();
+          System.out.println("Total words in all documents: " + totalWordCount);
+          System.out.println("Total empty spaces in all documents: " + totalEmptySpaces);
+          System.out.println("Total empty lines in all documents: " + totalEmptyLines);
+          
           return obj;
     }
 }

@@ -43,8 +43,14 @@ public class Database {
           int result = 0;
           Connection con = getConnection();
         try(Statement stmt = con.createStatement()){
-            result = stmt.executeUpdate("INSERT INTO directorydata (DirectoryName,TotalLines,TotalCharacters) "
-                    + "VALUES ('" + obj.getDirectory() + "','" + obj.getTotalLineCount() + "','" + obj.getTotalCharacterCount()+ "')");
+            result = stmt.executeUpdate("INSERT INTO directorydata (DirectoryName,TotalLines,TotalCharacters,TotalWords,TotalWhiteSpace,TotalEmptyLines) "
+                    + "VALUES ('" + obj.getDirectory() + "','" + 
+                    obj.getTotalLineCount() + "','" + 
+                    obj.getTotalCharacterCount()+ "','" + 
+                    obj.getTotalWordCount() + "','" + 
+                    obj.getTotalEmptySpaces() + "','" + 
+                    obj.getTotalEmptyLines() + "')");
+            
            stmt.close();
            con.close();
         }catch(SQLException e){
