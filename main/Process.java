@@ -55,7 +55,6 @@ public class Process implements Callable<FileReadings> {
                   charCount += line.length();
          }
        
-              System.out.println("total words in this document" + wordCount);
               obj.setLineCount(lineCount);
               obj.setCharacterCount(charCount);
               obj.setEmptyLineCount(emptyLineCount);

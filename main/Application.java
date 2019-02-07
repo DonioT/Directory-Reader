@@ -81,7 +81,7 @@ public class Application {
          instance.setTotalLineCount(instance.totalLineCount);
          
          Database db = new Database(instance);
-         System.out.println("Insert was successful: " + db.insert());
+         System.out.println("Database insert was successful: " + db.insert());
     }
     
     public Application getTotals(Application obj) throws InterruptedException, ExecutionException{
@@ -102,7 +102,6 @@ public class Application {
       }  
       executor.shutdown();
       
-          System.out.println("-------------------------------------------------");
           System.out.println("Total lines in all documents: " + totalLineCount);
           System.out.println("Total characters in all documents: " + totalCharacterCount);
           System.out.println("Total words in all documents: " + totalWordCount);
